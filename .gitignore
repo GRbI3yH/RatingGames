@@ -1,0 +1,5 @@
+.gradle
+gradle
+out
+.idea
+*.iml
