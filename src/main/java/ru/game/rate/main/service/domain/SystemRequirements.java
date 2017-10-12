@@ -103,4 +103,9 @@ public class SystemRequirements extends BaseEntity {
     public void setType(Type type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return cpu+" "+ram+" "+videoCard+" "+diskSpace+" "+type;
+    }
 }

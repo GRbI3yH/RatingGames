@@ -1,9 +1,19 @@
 package ru.game.rate.main.service.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Component;
 import ru.game.rate.main.service.domain.Game;
+import ru.game.rate.main.service.dto.search.GameSearchCriteria;
 
-public interface RepositoryGame extends JpaRepository<Game, Integer> {
+import java.util.List;
 
+public interface RepositoryGame {
+
+    Game save(Game game);
+
+    void delete(Integer id);
+
+    Game get(Integer id);
+
+    List findAll();
+
+    List<Game> findByCriteria(GameSearchCriteria searchCriteria);
 }

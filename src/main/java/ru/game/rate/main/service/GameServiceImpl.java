@@ -2,8 +2,8 @@ package ru.game.rate.main.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.game.rate.main.service.domain.BaseEntity;
 import ru.game.rate.main.service.domain.Game;
+import ru.game.rate.main.service.dto.search.GameSearchCriteria;
 import ru.game.rate.main.service.repository.RepositoryGame;
 
 import java.util.List;
@@ -47,7 +47,13 @@ public class GameServiceImpl implements GameService{
      */
     @Override
     public Game getById(Integer id) {
-        return repositoryGame.findOne(id);
+        return repositoryGame.get(id);
+    }
+
+
+    @Override
+    public List<Game> search(GameSearchCriteria searchCriteria) {
+        return repositoryGame.findByCriteria(searchCriteria);
     }
 
 }

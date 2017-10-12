@@ -10,6 +10,10 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "game")
+@NamedNativeQueries({
+        @NamedNativeQuery(name = "Game.findAll", query = "SELECT g.* FROM Game g;")
+})
+
 public class Game extends BaseEntity {
 
     /**
@@ -60,13 +64,13 @@ public class Game extends BaseEntity {
      * оценка
      */
     @Column(name = "assessment")
-    private Integer assessment;
+    private Byte assessment;
 
     /**
      * Цена
      */
-    @Column(name = "standing")
-    private Double standing;
+    @Column(name = "price")
+    private Double price;
 
     /**
      * Лицензия
@@ -130,20 +134,20 @@ public class Game extends BaseEntity {
         this.platform = platform;
     }
 
-    public Integer getAssessment() {
+    public Byte getAssessment() {
         return assessment;
     }
 
-    public void setAssessment(Integer assessment) {
+    public void setAssessment(Byte assessment) {
         this.assessment = assessment;
     }
 
-    public Double getStanding() {
-        return standing;
+    public Double getPrice() {
+        return price;
     }
 
-    public void setStanding(Double standing) {
-        this.standing = standing;
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
     public String getLicense() {

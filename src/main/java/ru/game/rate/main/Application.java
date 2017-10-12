@@ -12,9 +12,7 @@ import ru.game.rate.main.service.domain.Game;
 import ru.game.rate.main.service.domain.Platform;
 import ru.game.rate.main.service.repository.RepositoryGame;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @SpringBootApplication
 @EnableAutoConfiguration
@@ -35,14 +33,11 @@ public class Application {
         Game game = new Game();
         game.setName("game 1");
         game.setDate(new Date());
-        game.setAssessment(3);
+        game.setAssessment(Byte.parseByte("3"));
         game.setLicense("MIT");
         game.setPlatform(Platform.WINDOWS);
 
-        List<Game> games = new ArrayList<>();
-        games.add(game);
-
-        repo.save(games);
+        repo.save(game);
 
     }
 }
