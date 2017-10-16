@@ -10,8 +10,8 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "game")
-@NamedNativeQueries({
-        @NamedNativeQuery(name = "Game.findAll", query = "SELECT g.* FROM Game g;")
+@NamedQueries({
+        @NamedQuery(name = "Game.findAll", query = "SELECT g FROM Game g")
 })
 
 public class Game extends BaseEntity {

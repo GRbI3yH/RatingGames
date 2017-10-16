@@ -1,14 +1,15 @@
 package ru.game.rate.main.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 import ru.game.rate.main.facade.FacadeService;
 import ru.game.rate.main.service.domain.Game;
 import ru.game.rate.main.service.dto.search.GameSearchCriteria;
 
 import java.util.List;
+
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
 public class Rest {
@@ -16,7 +17,7 @@ public class Rest {
     @Autowired
     private FacadeService facade;
 
-    @GetMapping("/getGame")
+    @GetMapping("/get/games")
     public List<Game> getAll(){
         return facade.findAll();
     }
@@ -31,8 +32,8 @@ public class Rest {
         facade.getById(id);
     }
 
-    @PostMapping("/saveGame")
-    public void save(Game game){
+    @RequestMapping(value = "/save", method = POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public void save(@RequestBody Game game){
         facade.save(game);
     }
 

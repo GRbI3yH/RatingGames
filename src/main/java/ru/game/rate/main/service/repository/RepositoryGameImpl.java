@@ -49,7 +49,7 @@ public class RepositoryGameImpl implements RepositoryGame{
 
     @Override
     public List<Game> findAll() {
-        return em.createNamedQuery("Game.findAll").getResultList();
+        return em.createNamedQuery("Game.findAll", Game.class).getResultList();
     }
 
     @Override
