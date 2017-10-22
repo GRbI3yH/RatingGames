@@ -1,5 +1,7 @@
 package ru.game.rate.main.service.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 /**
@@ -42,6 +44,7 @@ public class SystemRequirements extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="game_id")
+    @JsonIgnore
     private Game owner;
 
     public SystemRequirements(){

@@ -1,5 +1,7 @@
 package ru.game.rate.main.service.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 /**
@@ -12,11 +14,12 @@ public class Genre extends BaseEntity {
     /**
      * Имя
      */
-    @Column(name = "name",unique = true,nullable = false)
+    @Column(name = "name",nullable = false)
     private GenreType genre;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "game_id")
+    @JsonIgnore
     private Game owner;
 
     public Genre(){
