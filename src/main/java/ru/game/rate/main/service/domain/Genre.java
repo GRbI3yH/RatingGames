@@ -14,7 +14,8 @@ public class Genre extends BaseEntity {
     /**
      * Имя
      */
-    @Column(name = "name",nullable = false)
+    @Column(name = "genre",nullable = false)
+    @Enumerated(EnumType.STRING)
     private GenreType genre;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
