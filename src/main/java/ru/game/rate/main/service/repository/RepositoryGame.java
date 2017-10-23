@@ -13,7 +13,7 @@ public interface RepositoryGame {
 
     Game get(Integer id);
 
-    List findAll();
+    List<Game> findAll();
 
     List<Game> findByCriteria(GameSearchCriteria searchCriteria);
 }

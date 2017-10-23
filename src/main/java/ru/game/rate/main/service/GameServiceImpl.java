@@ -2,8 +2,9 @@ package ru.game.rate.main.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.game.rate.main.service.domain.Game;
+import ru.game.rate.main.service.dto.GameDto;
 import ru.game.rate.main.service.dto.search.GameSearchCriteria;
+import ru.game.rate.main.service.dtoConverter.DtoConverter;
 import ru.game.rate.main.service.repository.RepositoryGame;
 
 import java.util.List;
@@ -14,13 +15,17 @@ public class GameServiceImpl implements GameService{
     @Autowired
     private RepositoryGame repositoryGame;
 
+    @Autowired
+    private DtoConverter dtoConverter;
+
     /**
      * возвращает все игры
      * @return
      */
     @Override
-    public List<Game> findAll(){
-        return repositoryGame.findAll();
+    public List<GameDto> findAll(){
+
+        return dtoConverter.toListDto(repositoryGame.findAll());
     }
 
     /**
@@ -34,11 +39,11 @@ public class GameServiceImpl implements GameService{
 
     /**
      *  Добавляет  игру
-     * @param game - Что добовляем
+     * @param gameDto - Что добовляем
      */
     @Override
-    public void save(Game game){
-        repositoryGame.save(game);
+    public GameDto save(GameDto gameDto){
+        return dtoConverter.toDto(repositoryGame.save(dtoConverter.toEntity(gameDto)));
     }
 
     /**
@@ -46,14 +51,14 @@ public class GameServiceImpl implements GameService{
      * @param id - Ид игры
      */
     @Override
-    public Game getById(Integer id) {
-        return repositoryGame.get(id);
+    public GameDto getById(Integer id) {
+        return dtoConverter.toDto(repositoryGame.get(id));
     }
 
 
     @Override
-    public List<Game> search(GameSearchCriteria searchCriteria) {
-        return repositoryGame.findByCriteria(searchCriteria);
+    public List<GameDto> search(GameSearchCriteria searchCriteria) {
+        return dtoConverter.toListDto(repositoryGame.findByCriteria(searchCriteria));
     }
 
 }

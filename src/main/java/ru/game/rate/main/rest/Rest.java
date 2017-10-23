@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.game.rate.main.facade.FacadeService;
-import ru.game.rate.main.service.domain.Game;
+import ru.game.rate.main.service.dto.GameDto;
 import ru.game.rate.main.service.dto.search.GameSearchCriteria;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class Rest {
 
     @GetMapping("/get/games")
     @ResponseBody
-    public List<Game> getAll(){
+    public List<GameDto> getAll(){
         return facade.findAll();
     }
 
@@ -29,21 +29,21 @@ public class Rest {
     }
 
     @RequestMapping(value = "getById/{id}", method = RequestMethod.POST)
-    public Game getById(@PathVariable("id")Integer id){
+    public GameDto getById(@PathVariable("id")Integer id){
         return facade.getById(id);
     }
 
     @RequestMapping(value = "/save", method = POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @CrossOrigin
     @ResponseBody
-    public void save(@RequestBody Game game){
-        facade.save(game);
+    public GameDto save(@RequestBody GameDto game){
+        return facade.save(game);
     }
 
     @RequestMapping(value = "/searchGame", method = POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @CrossOrigin
     @ResponseBody
-    public List<Game> search(@RequestBody GameSearchCriteria searchCriteria){
+    public List<GameDto> search(@RequestBody GameSearchCriteria searchCriteria){
         return facade.search(searchCriteria);
     }
 }

@@ -1,20 +1,20 @@
 package ru.game.rate.main.service;
 
-import ru.game.rate.main.service.domain.Game;
+import ru.game.rate.main.service.dto.GameDto;
 import ru.game.rate.main.service.dto.search.GameSearchCriteria;
 
 import java.util.List;
 
 public interface GameService {
 
-    public List<Game> findAll();
+    public List<GameDto> findAll();
 
     public void delete(Integer id);
 
-    public void save(Game game);
+    public GameDto save(GameDto gameDto);
 
-    public Game getById(Integer id);
+    public GameDto getById(Integer id);
 
-    public List<Game> search(GameSearchCriteria searchCriteria);
+    public List<GameDto> search(GameSearchCriteria searchCriteria);
 
 }

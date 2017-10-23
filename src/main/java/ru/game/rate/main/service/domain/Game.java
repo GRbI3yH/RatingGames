@@ -3,7 +3,8 @@ package ru.game.rate.main.service.domain;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
+
+import static javax.persistence.EnumType.STRING;
 
 /**
  * Сущность "Игра"
@@ -25,8 +26,10 @@ public class Game extends BaseEntity {
     /**
      * Жанры
      */
-    @OneToMany(mappedBy = "owner", orphanRemoval = true, cascade = CascadeType.ALL)
-    private Set<Genre> genres;
+    @ElementCollection
+    @CollectionTable(name = "genres", joinColumns = @JoinColumn(name = "game_id"))
+    @Column(name = "genre")
+    private List<GenreType> genres;
 
     /**
      * Дата создания
@@ -56,7 +59,7 @@ public class Game extends BaseEntity {
     /**
      * Платформа
      */
-    @Enumerated(EnumType.STRING)
+    @Enumerated(STRING)
     @Column(name = "platform")
     private Platform platform;
 
@@ -86,11 +89,11 @@ public class Game extends BaseEntity {
         this.name = name;
     }
 
-    public Set<Genre> getGenres() {
+    public List<GenreType> getGenres() {
         return genres;
     }
 
-    public void setGenres(Set<Genre> genres) {
+    public void setGenres(List<GenreType> genres) {
         this.genres = genres;
     }
 

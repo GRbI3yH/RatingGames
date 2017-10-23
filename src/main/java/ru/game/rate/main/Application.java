@@ -8,15 +8,22 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.Import;
 import ru.game.rate.main.configure.DataBaseConfiguration;
-import ru.game.rate.main.service.domain.*;
+import ru.game.rate.main.configure.RestConfiguration;
+import ru.game.rate.main.service.domain.Game;
+import ru.game.rate.main.service.domain.GenreType;
+import ru.game.rate.main.service.domain.Platform;
+import ru.game.rate.main.service.domain.SystemRequirements;
 import ru.game.rate.main.service.repository.RepositoryGame;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @SpringBootApplication
 @EnableAutoConfiguration
 @Import({
-        DataBaseConfiguration.class
+        DataBaseConfiguration.class,
+        RestConfiguration.class
 })
 @ComponentScans({
         @ComponentScan("ru.game.rate.main.service"),
@@ -36,8 +43,9 @@ public class Application {
         game.setLicense("MIT");
         game.setPlatform(Platform.WINDOWS);
         game.setDeveloper("Dev");
-        Set<Genre> genres = new HashSet<Genre>();
-        genres.add(new Genre(game, GenreType.ACTION));
+        List<GenreType> genres = new ArrayList<>();
+        genres.add(GenreType.ACTION);
+        genres.add(GenreType.QUEST);
         game.setGenres(genres);
         List<SystemRequirements> requirements1 = new ArrayList< SystemRequirements>();
         requirements1.add(new SystemRequirements(game,"цпу",6,"видео",14.2));

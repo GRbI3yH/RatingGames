@@ -43,7 +43,7 @@ public class SystemRequirements extends BaseEntity {
     private Type type;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="game_id")
+    @JoinColumn(name="OWNER_ID")
     @JsonIgnore
     private Game owner;
 

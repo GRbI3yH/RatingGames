@@ -6,7 +6,7 @@ import javax.persistence.*;
 @MappedSuperclass
 public abstract class BaseEntity {
 
-    @Column(name = "ID", nullable = false)
+    @Column(name = "id", nullable = false)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

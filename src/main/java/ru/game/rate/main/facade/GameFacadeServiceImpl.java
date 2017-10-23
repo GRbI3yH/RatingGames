@@ -3,7 +3,7 @@ package ru.game.rate.main.facade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.game.rate.main.service.GameService;
-import ru.game.rate.main.service.domain.Game;
+import ru.game.rate.main.service.dto.GameDto;
 import ru.game.rate.main.service.dto.search.GameSearchCriteria;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class GameFacadeServiceImpl implements FacadeService {
      * @return
      */
     @Override
-    public List<Game> findAll() {
+    public List<GameDto> findAll() {
         return service.findAll();
     }
 
@@ -37,8 +37,8 @@ public class GameFacadeServiceImpl implements FacadeService {
      * @param game
      */
     @Override
-    public void save(Game game) {
-        service.save(game);
+    public GameDto save(GameDto game) {
+        return service.save(game);
     }
 
     /**
@@ -47,7 +47,7 @@ public class GameFacadeServiceImpl implements FacadeService {
      * @return
      */
     @Override
-    public Game getById(Integer id) {
+    public GameDto getById(Integer id) {
         return service.getById(id);
     }
 
@@ -57,7 +57,7 @@ public class GameFacadeServiceImpl implements FacadeService {
      * @return
      */
     @Override
-    public List<Game> search(GameSearchCriteria searchCriteria) {
+    public List<GameDto> search(GameSearchCriteria searchCriteria) {
         return service.search(searchCriteria);
     }
 }

@@ -1,6 +1,6 @@
 package ru.game.rate.main.service.dto.search;
 
-import ru.game.rate.main.service.domain.Genre;
+import ru.game.rate.main.service.domain.GenreType;
 import ru.game.rate.main.service.domain.Platform;
 import ru.game.rate.main.service.domain.SystemRequirements;
 
@@ -20,7 +20,7 @@ public class GameSearchCriteria {
     /**
      * Жанры
      */
-    private Set<Genre> genres;
+    private Set<GenreType> genres;
 
     /**
      * Системные Требования
@@ -70,11 +70,11 @@ public class GameSearchCriteria {
         this.name = name;
     }
 
-    public Set<Genre> getGenres() {
+    public Set<GenreType> getGenres() {
         return genres;
     }
 
-    public void setGenres(Set<Genre> genres) {
+    public void setGenres(Set<GenreType> genres) {
         this.genres = genres;
     }
 
