@@ -7,6 +7,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.Import;
+import ru.game.rate.main.configure.ConverterConfiguration;
 import ru.game.rate.main.configure.DataBaseConfiguration;
 import ru.game.rate.main.configure.RestConfiguration;
 import ru.game.rate.main.service.domain.Game;
@@ -23,7 +24,8 @@ import java.util.List;
 @EnableAutoConfiguration
 @Import({
         DataBaseConfiguration.class,
-        RestConfiguration.class
+        RestConfiguration.class,
+        ConverterConfiguration.class
 })
 @ComponentScans({
         @ComponentScan("ru.game.rate.main.service"),
