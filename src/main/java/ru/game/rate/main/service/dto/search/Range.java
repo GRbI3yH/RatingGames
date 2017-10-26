@@ -4,7 +4,7 @@ package ru.game.rate.main.service.dto.search;
  * Диапозон значений
  * @param <T>
  */
-public abstract class Range<T> {
+public class Range<T> {
 
     /**
      * Начальное значение

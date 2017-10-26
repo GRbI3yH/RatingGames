@@ -1,6 +1,5 @@
 package ru.game.rate.main.service.dto;
 
-import ru.game.rate.main.service.domain.GenreType;
 import ru.game.rate.main.service.domain.Platform;
 
 import java.util.Date;
@@ -15,7 +14,7 @@ public class GameDto extends BaseDto {
     /**
      * Жанры
      */
-    public List<GenreType> genres;
+    public List<GenreDto> genres;
 
     /**
      * Дата создания
@@ -45,7 +44,7 @@ public class GameDto extends BaseDto {
     /**
      * оценка
      */
-    public Byte assessment;
+    public Integer assessment;
 
     /**
      * Цена

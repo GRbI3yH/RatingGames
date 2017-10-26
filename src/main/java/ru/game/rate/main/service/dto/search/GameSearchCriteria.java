@@ -4,8 +4,11 @@ import ru.game.rate.main.service.domain.GenreType;
 import ru.game.rate.main.service.domain.Platform;
 import ru.game.rate.main.service.domain.SystemRequirements;
 
+import javax.persistence.Enumerated;
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
+
+import static javax.persistence.EnumType.STRING;
 
 /**
  * Критерии для поиска игр
@@ -20,7 +23,7 @@ public class GameSearchCriteria {
     /**
      * Жанры
      */
-    private Set<GenreType> genres;
+    private List<GenreType> genres;
 
     /**
      * Системные Требования
@@ -30,22 +33,27 @@ public class GameSearchCriteria {
     /**
      * Диапозон цены игры
      */
-    private Range<Double> priceRange;
+    private Double startPrice;
+    private Double endPrice;
 
     /**
      * Платформа
      */
+    @Enumerated(STRING)
     private Platform platform;
 
     /**
      * Диапозон даты создания
      */
-    private Range<Date> dateRange;
+    private Date startDate;
+    private Date endDate;
+
 
     /**
      * Диапозон рейтинга
      */
-    private Range<Byte> assessment;
+    private Integer startAssessment;
+    private Integer endAssessment;
 
     /**
      * Лицензия
@@ -70,11 +78,11 @@ public class GameSearchCriteria {
         this.name = name;
     }
 
-    public Set<GenreType> getGenres() {
+    public List<GenreType> getGenres() {
         return genres;
     }
 
-    public void setGenres(Set<GenreType> genres) {
+    public void setGenres(List<GenreType> genres) {
         this.genres = genres;
     }
 
@@ -86,36 +94,12 @@ public class GameSearchCriteria {
         this.requirements = requirements;
     }
 
-    public Range<Double> getPriceRange() {
-        return priceRange;
-    }
-
-    public void setPriceRange(Range<Double> priceRange) {
-        this.priceRange = priceRange;
-    }
-
     public Platform getPlatform() {
         return platform;
     }
 
     public void setPlatform(Platform platform) {
         this.platform = platform;
-    }
-
-    public Range<Date> getDateRange() {
-        return dateRange;
-    }
-
-    public void setDateRange(Range<Date> dateRange) {
-        this.dateRange = dateRange;
-    }
-
-    public Range<Byte> getAssessment() {
-        return assessment;
-    }
-
-    public void setAssessment(Range<Byte> assessment) {
-        this.assessment = assessment;
     }
 
     public String getLicense() {
@@ -140,5 +124,53 @@ public class GameSearchCriteria {
 
     public void setPublisher(String publisher) {
         this.publisher = publisher;
+    }
+
+    public Double getStartPrice() {
+        return startPrice;
+    }
+
+    public void setStartPrice(Double startPrice) {
+        this.startPrice = startPrice;
+    }
+
+    public Double getEndPrice() {
+        return endPrice;
+    }
+
+    public void setEndPrice(Double endPrice) {
+        this.endPrice = endPrice;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Integer getStartAssessment() {
+        return startAssessment;
+    }
+
+    public void setStartAssessment(Integer startAssessment) {
+        this.startAssessment = startAssessment;
+    }
+
+    public Integer getEndAssessment() {
+        return endAssessment;
+    }
+
+    public void setEndAssessment(Integer endAssessment) {
+        this.endAssessment = endAssessment;
     }
 }

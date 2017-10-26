@@ -3,14 +3,13 @@ package ru.game.rate.main.service.repository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.game.rate.main.service.domain.Game;
+import ru.game.rate.main.service.domain.Genre;
+import ru.game.rate.main.service.domain.SystemRequirements;
 import ru.game.rate.main.service.dto.search.GameSearchCriteria;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,81 +55,97 @@ public class RepositoryGameImpl implements RepositoryGame{
     public List<Game> findByCriteria(GameSearchCriteria searchCriteria) {
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery criteriaQuery = criteriaBuilder.createQuery();
-        Root<Game> root = criteriaQuery.from(Game.class);
+        Root<Game> gameRoot = criteriaQuery.from(Game.class);
+        Join<Game, Genre> genresJoin = gameRoot.join("genres");
+        Join<Game,SystemRequirements> systemRequirementsJoin = gameRoot.join("systemRequirements");
+
+
+//        criteriaQuery.select(gameRoot);
+//        List<Game> gameList = (List<Game>) em.createQuery(criteriaQuery).getResultList();
+
+//        Root<Genre> genreRoot = criteriaQuery.from(Genre.class);
+//        criteriaQuery.select(genreRoot);
+//        List<Genre> genreList = (List<Genre>) em.createQuery(criteriaQuery).getResultList();
+//        for (Genre genre :genreList){
+//            System.out.println(genre);
+//        }
+
 
         List<Predicate> predicates = new ArrayList<>();
-
         //Предикаты
 
-        if(nonNull(searchCriteria.getAssessment())){
-            buildDatePredicate(searchCriteria, criteriaBuilder, root, predicates);
-        }
+        buildDatePredicate(searchCriteria, criteriaBuilder, gameRoot, predicates);
 
-        if(nonNull(searchCriteria.getPriceRange())){
-            buildAssessmentPredicate(searchCriteria, criteriaBuilder, root, predicates);
-        }
+        buildAssessmentPredicate(searchCriteria, criteriaBuilder, gameRoot, predicates);
 
-        if(nonNull(searchCriteria.getDateRange())){
-            buildPricePredicate(searchCriteria, criteriaBuilder, root, predicates);
-        }
+        buildPricePredicate(searchCriteria, criteriaBuilder, gameRoot, predicates);
 
         if(nonNull(searchCriteria.getName()))
-            predicates.add(criteriaBuilder.like(root.get("name"),searchCriteria.getName()));
+            predicates.add(criteriaBuilder.like(gameRoot.get("name"),partialCoincidence(searchCriteria.getName())));
 
         if(nonNull(searchCriteria.getLicense()))
-            predicates.add(criteriaBuilder.like(root.get("license"),searchCriteria.getLicense()));
+            predicates.add(criteriaBuilder.like(gameRoot.get("license"),partialCoincidence(searchCriteria.getLicense())));
 
         if(nonNull(searchCriteria.getPlatform()))
-            predicates.add(criteriaBuilder.like(root.get("platform"),searchCriteria.getPlatform().name()));
+            predicates.add(criteriaBuilder.equal(gameRoot.get("platform"),searchCriteria.getPlatform()));
 
         if(nonNull(searchCriteria.getDeveloper()))
-            predicates.add(criteriaBuilder.like(root.get("developer"),searchCriteria.getDeveloper()));
+            predicates.add(criteriaBuilder.like(gameRoot.get("developer"),partialCoincidence(searchCriteria.getDeveloper())));
 
         if(nonNull(searchCriteria.getPublisher()))
-            predicates.add(criteriaBuilder.like(root.get("publisher"),searchCriteria.getPublisher()));
+            predicates.add(criteriaBuilder.like(gameRoot.get("publisher"),partialCoincidence(searchCriteria.getPublisher())));
 
-        if(nonNull(searchCriteria.getRequirements()))
-            predicates.add(criteriaBuilder.equal(root.get("systemRequirements"),searchCriteria.getRequirements()));
+        if(nonNull(searchCriteria.getRequirements())){
+            predicates.add(criteriaBuilder.equal(systemRequirementsJoin.get("cpu"),partialCoincidence(searchCriteria.getRequirements().getCpu())));
+            predicates.add(criteriaBuilder.equal(systemRequirementsJoin.get("diskSpace"),searchCriteria.getRequirements().getDiskSpace()));
+            predicates.add(criteriaBuilder.equal(systemRequirementsJoin.get("ram"),searchCriteria.getRequirements().getRam()));
+            predicates.add(criteriaBuilder.equal(systemRequirementsJoin.get("videoCard"),partialCoincidence(searchCriteria.getRequirements().getVideoCard())));
+            predicates.add(criteriaBuilder.equal(systemRequirementsJoin.get("type"),searchCriteria.getRequirements().getType()));
+        }
 
-        if(nonNull(searchCriteria.getGenres()))
-            predicates.add(criteriaBuilder.in(root.get("genre")).in(searchCriteria.getGenres()));
-//        predicates.add(root.get("genre").in(searchCriteria.getGenres()));
+        if(nonNull(searchCriteria.getGenres())){
+            predicates.add(criteriaBuilder.equal(genresJoin.get("genre"),searchCriteria.getGenres()));
+        }
 
-        criteriaQuery.select(root).where(criteriaBuilder.or(predicates.toArray(new Predicate[predicates.size()])));
+        criteriaQuery.select(gameRoot).where(criteriaBuilder.or(predicates.toArray(new Predicate[predicates.size()])));
+
         return em.createQuery(criteriaQuery).getResultList();
     }
 
     private void buildDatePredicate(GameSearchCriteria searchCriteria, CriteriaBuilder criteriaBuilder, Root<Game> root, List<Predicate> predicates) {
-        if (nonNull(searchCriteria.getDateRange().getStartRange()) && nonNull(searchCriteria.getDateRange().getEndRange())) {
-            Predicate predicateStart = criteriaBuilder.greaterThanOrEqualTo(root.get("date"), searchCriteria.getDateRange().getStartRange());
-            Predicate predicateEnd = criteriaBuilder.lessThanOrEqualTo(root.get("date"), searchCriteria.getDateRange().getEndRange());
+        if (nonNull(searchCriteria.getStartDate()) && nonNull(searchCriteria.getEndDate())) {
+            Predicate predicateStart = criteriaBuilder.greaterThanOrEqualTo(root.get("date"), searchCriteria.getStartDate());
+            Predicate predicateEnd = criteriaBuilder.lessThanOrEqualTo(root.get("date"), searchCriteria.getEndDate());
             predicates.add(criteriaBuilder.and(predicateStart, predicateEnd));
-
-        } else if (nonNull(searchCriteria.getDateRange().getStartRange())) {
-            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("date"), searchCriteria.getDateRange().getStartRange()));
-        } else if (nonNull(searchCriteria.getDateRange().getEndRange())) {
-            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("date"), searchCriteria.getDateRange().getEndRange()));
+        } else if (nonNull(searchCriteria.getStartDate())) {
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("date"), searchCriteria.getStartDate()));
+        } else if (nonNull(searchCriteria.getEndDate())) {
+            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("date"), searchCriteria.getEndDate()));
         }
     }
 
     private void buildAssessmentPredicate(GameSearchCriteria searchCriteria, CriteriaBuilder criteriaBuilder, Root<Game> root, List<Predicate> predicates) {
-        if(nonNull(searchCriteria.getAssessment().getStartRange()) && nonNull(searchCriteria.getAssessment().getEndRange())){
-            predicates.add(criteriaBuilder.between(root.get("assessment"),searchCriteria.getAssessment().getStartRange(),searchCriteria.getAssessment().getEndRange()));
-        } else if (!(searchCriteria.getAssessment().getStartRange() == null)){
-            predicates.add(criteriaBuilder.ge(root.get("assessment"), searchCriteria.getAssessment().getStartRange()));
-        } else if (!(searchCriteria.getAssessment().getEndRange() == null)){
-            predicates.add(criteriaBuilder.le(root.get("assessment"), searchCriteria.getAssessment().getEndRange()));
+        if(nonNull(searchCriteria.getStartAssessment()) && nonNull(searchCriteria.getEndAssessment())){
+            predicates.add(criteriaBuilder.between(root.get("assessment"),searchCriteria.getStartAssessment(),searchCriteria.getEndAssessment()));
+        } else if (!(searchCriteria.getStartAssessment() == null)){
+            predicates.add(criteriaBuilder.ge(root.get("assessment"), searchCriteria.getStartAssessment()));
+        } else if (!(searchCriteria.getEndAssessment() == null)){
+            predicates.add(criteriaBuilder.le(root.get("assessment"), searchCriteria.getEndAssessment()));
         }
     }
 
     private void buildPricePredicate(GameSearchCriteria searchCriteria, CriteriaBuilder criteriaBuilder, Root<Game> root, List<Predicate> predicates) {
-        if(nonNull(searchCriteria.getPriceRange().getStartRange()) && nonNull(searchCriteria.getPriceRange().getEndRange())){
-            predicates.add(criteriaBuilder.between(root.get("price"), searchCriteria.getPriceRange().getStartRange(), searchCriteria.getPriceRange().getEndRange()));
-        } else if (nonNull(searchCriteria.getPriceRange().getStartRange())){
-            predicates.add(criteriaBuilder.ge(root.get("price"), searchCriteria.getPriceRange().getStartRange()));
-        } else if (nonNull(searchCriteria.getPriceRange().getEndRange())){
-            predicates.add(criteriaBuilder.le(root.get("price"), searchCriteria.getPriceRange().getEndRange()));
+        if(nonNull(searchCriteria.getStartPrice()) && nonNull(searchCriteria.getEndPrice())){
+            predicates.add(criteriaBuilder.between(root.get("price"), searchCriteria.getStartPrice(), searchCriteria.getEndPrice()));
+        } else if (nonNull(searchCriteria.getStartPrice())){
+            predicates.add(criteriaBuilder.ge(root.get("price"), searchCriteria.getStartPrice()));
+        } else if (nonNull(searchCriteria.getEndPrice())){
+            predicates.add(criteriaBuilder.le(root.get("price"), searchCriteria.getEndPrice()));
         }
+    }
+
+    private String partialCoincidence(String str){
+        return "%"+str+"%";
     }
 
     private boolean isNew(Game game) {

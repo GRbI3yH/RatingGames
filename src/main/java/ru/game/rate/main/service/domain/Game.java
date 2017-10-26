@@ -10,7 +10,7 @@ import static javax.persistence.EnumType.STRING;
  * Сущность "Игра"
  */
 @Entity
-@Table(name = "game")
+@Table(name = "game", schema = "public")
 @NamedQueries({
         @NamedQuery(name = "Game.findAll", query = "SELECT g FROM Game g")
 })
@@ -26,10 +26,11 @@ public class Game extends BaseEntity {
     /**
      * Жанры
      */
-    @ElementCollection
-    @CollectionTable(name = "genres", joinColumns = @JoinColumn(name = "game_id"))
-    @Column(name = "genre")
-    private List<GenreType> genres;
+//    @ElementCollection
+//    @CollectionTable(name = "genres", joinColumns = @JoinColumn(name = "game_id"))
+    //@Column(name = "genre")
+    @OneToMany(mappedBy = "owner", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<Genre> genres;
 
     /**
      * Дата создания
@@ -59,15 +60,15 @@ public class Game extends BaseEntity {
     /**
      * Платформа
      */
-    @Enumerated(STRING)
     @Column(name = "platform")
+    @Enumerated(STRING)
     private Platform platform;
 
     /**
      * оценка
      */
     @Column(name = "assessment")
-    private Byte assessment;
+    private Integer assessment;
 
     /**
      * Цена
@@ -89,11 +90,11 @@ public class Game extends BaseEntity {
         this.name = name;
     }
 
-    public List<GenreType> getGenres() {
+    public List<Genre> getGenres() {
         return genres;
     }
 
-    public void setGenres(List<GenreType> genres) {
+    public void setGenres(List<Genre> genres) {
         this.genres = genres;
     }
 
@@ -137,11 +138,11 @@ public class Game extends BaseEntity {
         this.platform = platform;
     }
 
-    public Byte getAssessment() {
+    public Integer getAssessment() {
         return assessment;
     }
 
-    public void setAssessment(Byte assessment) {
+    public void setAssessment(Integer assessment) {
         this.assessment = assessment;
     }
 

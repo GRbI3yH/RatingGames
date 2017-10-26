@@ -1,8 +1,14 @@
 package ru.game.rate.main.service.domain;
 
 public enum Platform {
-    WINDOWS,
-    LINUX,
-    MACOS,
-    ANDROID
+    WINDOWS("WINDOWS"),
+    LINUX("LINUX"),
+    MACOS("MACOS"),
+    ANDROID("ANDROID");
+
+    private final String type;
+
+    Platform(String type) {
+        this.type = type;
+    }
 }

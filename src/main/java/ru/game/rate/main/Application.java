@@ -10,10 +10,7 @@ import org.springframework.context.annotation.Import;
 import ru.game.rate.main.configure.ConverterConfiguration;
 import ru.game.rate.main.configure.DataBaseConfiguration;
 import ru.game.rate.main.configure.RestConfiguration;
-import ru.game.rate.main.service.domain.Game;
-import ru.game.rate.main.service.domain.GenreType;
-import ru.game.rate.main.service.domain.Platform;
-import ru.game.rate.main.service.domain.SystemRequirements;
+import ru.game.rate.main.service.domain.*;
 import ru.game.rate.main.service.repository.RepositoryGame;
 
 import java.util.ArrayList;
@@ -39,15 +36,16 @@ public class Application {
         RepositoryGame repo = run.getBean(RepositoryGame.class);
 
         Game game = new Game();
-        game.setName("game 1");
+        game.setName("game1");
         game.setDate(new Date());
-        game.setAssessment(Byte.parseByte("3"));
+        game.setAssessment(5);
         game.setLicense("MIT");
         game.setPlatform(Platform.WINDOWS);
         game.setDeveloper("Dev");
-        List<GenreType> genres = new ArrayList<>();
-        genres.add(GenreType.ACTION);
-        genres.add(GenreType.QUEST);
+        game.setPrice(600d);
+        List<Genre> genres = new ArrayList<>();
+        genres.add(new Genre(GenreType.ACTION));
+        genres.add(new Genre(GenreType.QUEST));
         game.setGenres(genres);
         List<SystemRequirements> requirements1 = new ArrayList< SystemRequirements>();
         requirements1.add(new SystemRequirements(game,"цпу",6,"видео",14.2));

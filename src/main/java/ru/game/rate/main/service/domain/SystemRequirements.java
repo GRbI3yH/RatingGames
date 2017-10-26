@@ -8,7 +8,7 @@ import javax.persistence.*;
  * Сущность "Системные Требования"
  */
 @Entity
-@Table(name = "SystemRequirements")
+@Table(name = "SystemRequirements", schema = "public")
 public class SystemRequirements extends BaseEntity {
 
     /**
