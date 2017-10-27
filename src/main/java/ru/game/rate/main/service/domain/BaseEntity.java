@@ -1,15 +1,18 @@
 package ru.game.rate.main.service.domain;
 
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.PrePersist;
+import java.util.UUID;
 
 @MappedSuperclass
 public abstract class BaseEntity {
 
     @Column(name = "id", nullable = false)
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private String id;
 
     public BaseEntity() {
     }
@@ -17,11 +20,18 @@ public abstract class BaseEntity {
     public BaseEntity(Integer id) {
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
+    }
+
+    @PrePersist
+    public void genId() {
+        if (id == null) {
+            this.id = UUID.randomUUID().toString();
+        }
     }
 }

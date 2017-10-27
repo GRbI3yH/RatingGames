@@ -16,6 +16,7 @@ import ru.game.rate.main.service.repository.RepositoryGame;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 @SpringBootApplication
 @EnableAutoConfiguration
@@ -35,22 +36,69 @@ public class Application {
         ConfigurableApplicationContext run = SpringApplication.run(Application.class);
         RepositoryGame repo = run.getBean(RepositoryGame.class);
 
+        addGames(repo,10);
+    }
+
+    private static void addGames(RepositoryGame repo,Integer quantity){
+        List<Game> games = new ArrayList<Game>();
+        for(int i = 0; i < quantity; i++){
+            games.add(generateGame(i,quantity));
+        }
+
+        for (Game game:games){
+            repo.save(game);
+        }
+    }
+
+    private static Integer iterGlob = 0;
+
+    private static Game generateGame(Integer iter,Integer quantity){
+        Random rand = new Random();
+
         Game game = new Game();
-        game.setName("game1");
+        game.setId(String.valueOf(iter));
+        game.setName("game "+rand.nextInt(quantity));
         game.setDate(new Date());
-        game.setAssessment(5);
-        game.setLicense("MIT");
+        game.setAssessment(rand.nextInt(100));
+        game.setLicense("MIT "+rand.nextInt(3));
         game.setPlatform(Platform.WINDOWS);
-        game.setDeveloper("Dev");
-        game.setPrice(600d);
+        game.setDeveloper("Dev "+rand.nextInt(3));
+        game.setPrice(rand.nextInt(3000)/2.1);
         List<Genre> genres = new ArrayList<>();
-        genres.add(new Genre(GenreType.ACTION));
-        genres.add(new Genre(GenreType.QUEST));
+        for (int i = 0; i<4; i++){
+            GenreType genreType = GenreType.STRATEGY;
+            switch (rand.nextInt(5)){
+                case 0:
+                    genreType = GenreType.ACTION;
+                    break;
+                case 1:
+                    genreType = GenreType.ADVENTURE;
+                    break;
+                case 2:
+                    genreType = GenreType.FIGHTING;
+                    break;
+                case 3:
+                    genreType = GenreType.QUEST;
+                    break;
+                case 4:
+                    genreType = GenreType.RPG;
+                    break;
+                case 5:
+                    genreType = GenreType.SIMULATION;
+                    break;
+            }
+            Genre genre = new Genre(genreType);
+            genre.setOwner(game);
+            iterGlob++;
+            genre.setId(String.valueOf(iterGlob));
+            genres.add(genre);
+        }
         game.setGenres(genres);
         List<SystemRequirements> requirements1 = new ArrayList< SystemRequirements>();
-        requirements1.add(new SystemRequirements(game,"цпу",6,"видео",14.2));
+        SystemRequirements SystemRequirements = new SystemRequirements(game,"цпу"+rand.nextInt(quantity),rand.nextInt(quantity),"видео"+rand.nextInt(quantity),(double)rand.nextInt(quantity));
+        SystemRequirements.setId(String.valueOf(iter));
+        requirements1.add(SystemRequirements);
         game.setSystemRequirements(requirements1);
-        repo.save(game);
-
+        return game;
     }
 }
