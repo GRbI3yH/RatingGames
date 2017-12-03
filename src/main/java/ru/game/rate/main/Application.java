@@ -36,7 +36,7 @@ public class Application {
         ConfigurableApplicationContext run = SpringApplication.run(Application.class);
         RepositoryGame repo = run.getBean(RepositoryGame.class);
 
-        addGames(repo,10);
+        addGames(repo,20);
     }
 
     private static void addGames(RepositoryGame repo,Integer quantity){
@@ -51,13 +51,14 @@ public class Application {
     }
 
     private static Integer iterGlob = 0;
+    private static Integer iterGlobgenre = 0;
 
     private static Game generateGame(Integer iter,Integer quantity){
         Random rand = new Random();
 
         Game game = new Game();
-        game.setId(String.valueOf(iter));
-        game.setName("game "+rand.nextInt(quantity));
+        //game.setId(String.valueOf(iter));
+        game.setName("game "+ iterGlob++ );
         game.setDate(new Date());
         game.setAssessment(rand.nextInt(100));
         game.setLicense("MIT "+rand.nextInt(3));
@@ -65,7 +66,7 @@ public class Application {
         game.setDeveloper("Dev "+rand.nextInt(3));
         game.setPrice(rand.nextInt(3000)/2.1);
         List<Genre> genres = new ArrayList<>();
-        for (int i = 0; i<4; i++){
+        for (int i = 0; i<2; i++){
             GenreType genreType = GenreType.STRATEGY;
             switch (rand.nextInt(5)){
                 case 0:
@@ -89,14 +90,14 @@ public class Application {
             }
             Genre genre = new Genre(genreType);
             genre.setOwner(game);
-            iterGlob++;
-            genre.setId(String.valueOf(iterGlob));
+            //iterGlob++;
+            //genre.setId(String.valueOf(iterGlobgenre++));
             genres.add(genre);
         }
         game.setGenres(genres);
         List<SystemRequirements> requirements1 = new ArrayList< SystemRequirements>();
         SystemRequirements SystemRequirements = new SystemRequirements(game,"цпу"+rand.nextInt(quantity),rand.nextInt(quantity),"видео"+rand.nextInt(quantity),(double)rand.nextInt(quantity));
-        SystemRequirements.setId(String.valueOf(iter));
+        //SystemRequirements.setId(String.valueOf(iter));
         requirements1.add(SystemRequirements);
         game.setSystemRequirements(requirements1);
         return game;

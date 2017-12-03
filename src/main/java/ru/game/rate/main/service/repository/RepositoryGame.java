@@ -9,9 +9,9 @@ public interface RepositoryGame {
 
     Game save(Game game);
 
-    void delete(Integer id);
+    void delete(String id);
 
-    Game get(Integer id);
+    Game get(String id);
 
     List<Game> findAll();
 

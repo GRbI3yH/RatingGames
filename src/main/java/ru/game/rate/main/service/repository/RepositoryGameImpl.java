@@ -4,6 +4,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.game.rate.main.service.domain.Game;
 import ru.game.rate.main.service.domain.Genre;
+import ru.game.rate.main.service.domain.GenreType;
 import ru.game.rate.main.service.domain.SystemRequirements;
 import ru.game.rate.main.service.dto.search.GameSearchCriteria;
 
@@ -35,14 +36,14 @@ public class RepositoryGameImpl implements RepositoryGame{
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(String id) {
         Game game = em.find(Game.class, id);
         if (isNull(game)) throw new IllegalArgumentException("Entity is not found");
         em.remove(game);
     }
 
     @Override
-    public Game get(Integer id) {
+    public Game get(String id) {
         return em.find(Game.class, id);
     }
 
@@ -56,60 +57,59 @@ public class RepositoryGameImpl implements RepositoryGame{
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery criteriaQuery = criteriaBuilder.createQuery();
         Root<Game> gameRoot = criteriaQuery.from(Game.class);
-        Join<Game, Genre> genresJoin = gameRoot.join("genres");
-        Join<Game,SystemRequirements> systemRequirementsJoin = gameRoot.join("systemRequirements");
-
-
-//        criteriaQuery.select(gameRoot);
-//        List<Game> gameList = (List<Game>) em.createQuery(criteriaQuery).getResultList();
-
-//        Root<Genre> genreRoot = criteriaQuery.from(Genre.class);
-//        criteriaQuery.select(genreRoot);
-//        List<Genre> genreList = (List<Genre>) em.createQuery(criteriaQuery).getResultList();
-//        for (Genre genre :genreList){
-//            System.out.println(genre);
-//        }
-
-
         List<Predicate> predicates = new ArrayList<>();
         //Предикаты
-
-        buildDatePredicate(searchCriteria, criteriaBuilder, gameRoot, predicates);
-
-        buildAssessmentPredicate(searchCriteria, criteriaBuilder, gameRoot, predicates);
-
-        buildPricePredicate(searchCriteria, criteriaBuilder, gameRoot, predicates);
-
-        if(nonNull(searchCriteria.getName()))
-            predicates.add(criteriaBuilder.like(gameRoot.get("name"),partialCoincidence(searchCriteria.getName())));
-
-        if(nonNull(searchCriteria.getLicense()))
-            predicates.add(criteriaBuilder.like(gameRoot.get("license"),partialCoincidence(searchCriteria.getLicense())));
-
-        if(nonNull(searchCriteria.getPlatform()))
-            predicates.add(criteriaBuilder.equal(gameRoot.get("platform"),searchCriteria.getPlatform()));
-
-        if(nonNull(searchCriteria.getDeveloper()))
-            predicates.add(criteriaBuilder.like(gameRoot.get("developer"),partialCoincidence(searchCriteria.getDeveloper())));
-
-        if(nonNull(searchCriteria.getPublisher()))
-            predicates.add(criteriaBuilder.like(gameRoot.get("publisher"),partialCoincidence(searchCriteria.getPublisher())));
-
-        if(nonNull(searchCriteria.getRequirements())){
-            predicates.add(criteriaBuilder.equal(systemRequirementsJoin.get("cpu"),partialCoincidence(searchCriteria.getRequirements().getCpu())));
-            predicates.add(criteriaBuilder.equal(systemRequirementsJoin.get("diskSpace"),searchCriteria.getRequirements().getDiskSpace()));
-            predicates.add(criteriaBuilder.equal(systemRequirementsJoin.get("ram"),searchCriteria.getRequirements().getRam()));
-            predicates.add(criteriaBuilder.equal(systemRequirementsJoin.get("videoCard"),partialCoincidence(searchCriteria.getRequirements().getVideoCard())));
-            predicates.add(criteriaBuilder.equal(systemRequirementsJoin.get("type"),searchCriteria.getRequirements().getType()));
-        }
-
-        if(nonNull(searchCriteria.getGenres())){
-            predicates.add(criteriaBuilder.equal(genresJoin.get("genre"),searchCriteria.getGenres()));
-        }
-
+        buildPredicateGame(searchCriteria, criteriaBuilder, gameRoot, predicates);
+        buildPredicateGenresJoin(searchCriteria, criteriaBuilder, gameRoot, predicates);
+        buildPredicateSystemRequirementsJoin(searchCriteria, criteriaBuilder, gameRoot, predicates);
         criteriaQuery.select(gameRoot).where(criteriaBuilder.or(predicates.toArray(new Predicate[predicates.size()])));
 
         return em.createQuery(criteriaQuery).getResultList();
+    }
+
+    private void buildPredicateGame(GameSearchCriteria searchCriteria, CriteriaBuilder criteriaBuilder, Root<Game> root, List<Predicate> predicates){
+        buildDatePredicate(searchCriteria, criteriaBuilder, root, predicates);
+        buildAssessmentPredicate(searchCriteria, criteriaBuilder, root, predicates);
+        buildPricePredicate(searchCriteria, criteriaBuilder, root, predicates);
+        if(nonNull(searchCriteria.getName()))
+            predicates.add(criteriaBuilder.like(root.get("name"),partialCoincidence(searchCriteria.getName())));
+        if(nonNull(searchCriteria.getLicense()))
+            predicates.add(criteriaBuilder.like(root.get("license"),partialCoincidence(searchCriteria.getLicense())));
+        if(nonNull(searchCriteria.getPlatform()))
+            predicates.add(criteriaBuilder.equal(root.get("platform"),searchCriteria.getPlatform()));
+        if(nonNull(searchCriteria.getDeveloper()))
+            predicates.add(criteriaBuilder.like(root.get("developer"),partialCoincidence(searchCriteria.getDeveloper())));
+        if(nonNull(searchCriteria.getPublisher()))
+            predicates.add(criteriaBuilder.like(root.get("publisher"),partialCoincidence(searchCriteria.getPublisher())));
+    }
+
+    private void buildPredicateGenresJoin(GameSearchCriteria searchCriteria, CriteriaBuilder criteriaBuilder, Root<Game> root, List<Predicate> predicates){
+        if(nonNull(searchCriteria.getGenres())){
+            if(searchCriteria.getGenres() == null){return;}
+            Join<Game, Genre> genresJoin = root.join("genres",JoinType.INNER);
+            predicates.add(criteriaBuilder.equal(genresJoin.get("genre"),searchCriteria.getGenres()));
+        }
+    }
+
+    private void buildPredicateSystemRequirementsJoin(GameSearchCriteria searchCriteria, CriteriaBuilder criteriaBuilder, Root<Game> root, List<Predicate> predicates){
+        if(nonNull(searchCriteria.getSystemRequirements())){
+            Join<Game,SystemRequirements> systemRequirementsJoin = root.join("systemRequirements",JoinType.INNER);
+            if(nonNull(searchCriteria.getSystemRequirements().getCpu())){
+                predicates.add(criteriaBuilder.equal(systemRequirementsJoin.get("cpu"),partialCoincidence(searchCriteria.getSystemRequirements().getCpu())));
+            }
+            if(nonNull(searchCriteria.getSystemRequirements().getDiskSpace())){
+                predicates.add(criteriaBuilder.equal(systemRequirementsJoin.get("diskSpace"),searchCriteria.getSystemRequirements().getDiskSpace()));
+            }
+            if(nonNull(searchCriteria.getSystemRequirements().getRam())){
+                predicates.add(criteriaBuilder.equal(systemRequirementsJoin.get("ram"),searchCriteria.getSystemRequirements().getRam()));
+            }
+            if(nonNull(searchCriteria.getSystemRequirements().getVideoCard())){
+                predicates.add(criteriaBuilder.equal(systemRequirementsJoin.get("videoCard"),partialCoincidence(searchCriteria.getSystemRequirements().getVideoCard())));
+            }
+            if(nonNull(searchCriteria.getSystemRequirements().getType())){
+                predicates.add(criteriaBuilder.equal(systemRequirementsJoin.get("type"),searchCriteria.getSystemRequirements().getType()));
+            }
+        }
     }
 
     private void buildDatePredicate(GameSearchCriteria searchCriteria, CriteriaBuilder criteriaBuilder, Root<Game> root, List<Predicate> predicates) {

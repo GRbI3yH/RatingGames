@@ -33,7 +33,7 @@ public class GameServiceImpl implements GameService{
      * @param id - Ид игры
      */
     @Override
-    public void delete(Integer id){
+    public void delete(String id){
         repositoryGame.delete(id);
     }
 
@@ -51,7 +51,7 @@ public class GameServiceImpl implements GameService{
      * @param id - Ид игры
      */
     @Override
-    public GameDto getById(Integer id) {
+    public GameDto getById(String id) {
         return dtoConverter.toDto(repositoryGame.get(id));
     }
 

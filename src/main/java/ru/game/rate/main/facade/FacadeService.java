@@ -7,14 +7,14 @@ import java.util.List;
 
 public interface FacadeService {
 
-    public List<GameDto> findAll();
+    List<GameDto> findAll();
 
-    public void delete(Integer id);
+    void delete(String id);
 
-    public GameDto save(GameDto game);
+    GameDto save(GameDto game);
 
-    public GameDto getById(Integer id);
+    GameDto getById(String id);
 
-    public List<GameDto> search(GameSearchCriteria searchCriteria);
+    List<GameDto> search(GameSearchCriteria searchCriteria);
 
 }

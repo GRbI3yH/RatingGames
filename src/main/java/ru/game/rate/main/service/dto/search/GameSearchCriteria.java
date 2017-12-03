@@ -23,12 +23,12 @@ public class GameSearchCriteria {
     /**
      * Жанры
      */
-    private List<GenreType> genres;
+    private GenreType genre;
 
     /**
      * Системные Требования
      */
-    private SystemRequirements requirements;
+    private SystemRequirements systemRequirement;
 
     /**
      * Диапозон цены игры
@@ -78,20 +78,20 @@ public class GameSearchCriteria {
         this.name = name;
     }
 
-    public List<GenreType> getGenres() {
-        return genres;
+    public GenreType getGenres() {
+        return genre;
     }
 
-    public void setGenres(List<GenreType> genres) {
-        this.genres = genres;
+    public void setGenres(GenreType genres) {
+        this.genre = genres;
     }
 
-    public SystemRequirements getRequirements() {
-        return requirements;
+    public SystemRequirements getSystemRequirements() {
+        return systemRequirement;
     }
 
-    public void setRequirements(SystemRequirements requirements) {
-        this.requirements = requirements;
+    public void setSystemRequirements(SystemRequirements systemRequirements) {
+        this.systemRequirement = systemRequirements;
     }
 
     public Platform getPlatform() {

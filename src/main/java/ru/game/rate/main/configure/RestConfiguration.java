@@ -22,6 +22,8 @@ public class RestConfiguration {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:63342");
+        config.addAllowedMethod(HttpMethod.GET);
+        config.addAllowedMethod(HttpMethod.PUT);
         config.addAllowedMethod(HttpMethod.POST);
         config.addAllowedMethod(HttpMethod.DELETE);
         config.addAllowedHeader("*");

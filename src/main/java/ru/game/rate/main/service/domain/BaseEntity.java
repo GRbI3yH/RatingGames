@@ -30,8 +30,8 @@ public abstract class BaseEntity {
 
     @PrePersist
     public void genId() {
-        if (id == null) {
-            this.id = UUID.randomUUID().toString();
+        if (getId() == null) {
+            setId(UUID.randomUUID().toString());
         }
     }
 }

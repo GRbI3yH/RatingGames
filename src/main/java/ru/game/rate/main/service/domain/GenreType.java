@@ -16,9 +16,9 @@ public enum GenreType implements Serializable{
     SPORTS("SPORTS"),//(СПОРТИВНАЯ ИГРА)
     PUZZLELOGIC("PUZZLELOGIC");//(ПАЗЗЛ, ГОЛОВОЛОМКА)
 
-    private final String type;
+    private final String genre;
 
-    GenreType(String type) {
-        this.type = type;
+    GenreType(String genre) {
+        this.genre = genre;
     }
 }

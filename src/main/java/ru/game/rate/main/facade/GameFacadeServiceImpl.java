@@ -28,7 +28,7 @@ public class GameFacadeServiceImpl implements FacadeService {
      * @param id
      */
     @Override
-    public void delete(Integer id) {
+    public void delete(String id) {
         service.delete(id);
     }
 
@@ -47,7 +47,7 @@ public class GameFacadeServiceImpl implements FacadeService {
      * @return
      */
     @Override
-    public GameDto getById(Integer id) {
+    public GameDto getById(String id) {
         return service.getById(id);
     }
 

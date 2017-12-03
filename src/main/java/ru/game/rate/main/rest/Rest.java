@@ -24,12 +24,12 @@ public class Rest {
     }
 
     @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public void delete(@PathVariable("id") Integer id){
+    public void delete(@PathVariable("id") String id){
         facade.delete(id);
     }
 
     @RequestMapping(value = "getById/{id}", method = RequestMethod.POST)
-    public GameDto getById(@PathVariable("id")Integer id){
+    public GameDto getById(@PathVariable("id")String id){
         return facade.getById(id);
     }
 

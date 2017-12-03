@@ -8,7 +8,7 @@ import static javax.persistence.EnumType.STRING;
 @Table(name = "Genre", schema = "public")
 public class Genre extends BaseEntity {
 
-    @Column(name = "name",unique = true,nullable = false)
+    @Column(name = "name",nullable = false)
     @Enumerated(STRING)
     private GenreType genre;
 
