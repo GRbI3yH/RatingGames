@@ -23,6 +23,7 @@ public class GameSearchCriteria {
     /**
      * Жанры
      */
+    @Enumerated(STRING)
     private GenreType genres;
 
     /**
