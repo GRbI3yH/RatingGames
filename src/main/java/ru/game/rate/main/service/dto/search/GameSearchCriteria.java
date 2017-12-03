@@ -23,7 +23,7 @@ public class GameSearchCriteria {
     /**
      * Жанры
      */
-    private GenreType genre;
+    private GenreType genres;
 
     /**
      * Системные Требования
@@ -79,11 +79,11 @@ public class GameSearchCriteria {
     }
 
     public GenreType getGenres() {
-        return genre;
+        return genres;
     }
 
     public void setGenres(GenreType genres) {
-        this.genre = genres;
+        this.genres = genres;
     }
 
     public SystemRequirements getSystemRequirements() {
@@ -172,5 +172,24 @@ public class GameSearchCriteria {
 
     public void setEndAssessment(Integer endAssessment) {
         this.endAssessment = endAssessment;
+    }
+
+    @Override
+    public String toString() {
+        return "GameSearchCriteria{" +
+                "name='" + name + '\'' +
+                ", genre=" + genres +
+                ", systemRequirement=" + systemRequirement +
+                ", startPrice=" + startPrice +
+                ", endPrice=" + endPrice +
+                ", platform=" + platform +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", startAssessment=" + startAssessment +
+                ", endAssessment=" + endAssessment +
+                ", license='" + license + '\'' +
+                ", developer='" + developer + '\'' +
+                ", publisher='" + publisher + '\'' +
+                '}';
     }
 }

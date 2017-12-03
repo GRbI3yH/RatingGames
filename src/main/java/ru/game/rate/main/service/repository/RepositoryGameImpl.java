@@ -54,6 +54,7 @@ public class RepositoryGameImpl implements RepositoryGame{
 
     @Override
     public List<Game> findByCriteria(GameSearchCriteria searchCriteria) {
+        System.out.println(searchCriteria.toString());
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery criteriaQuery = criteriaBuilder.createQuery();
         Root<Game> gameRoot = criteriaQuery.from(Game.class);
